@@ -2,62 +2,40 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>複数人データ → Excel出力</title>
-  <style>
-    table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-      padding: 5px;
-    }
-  </style>
+  <title>社員情報フォーム</title>
 </head>
 <body>
-  <h2>情報入力フォーム</h2>
+  <h2>社員情報入力フォーム</h2>
   <form id="dataForm">
+    <label>社員番号: <input type="text" id="id" required></label><br><br>
     <label>名前: <input type="text" id="name" required></label><br><br>
-    <label>年齢: <input type="number" id="age" required></label><br><br>
+    <label>生年月日: <input type="date" id="birth" required></label><br><br>
     <label>住所: <input type="text" id="address"></label><br><br>
     <label>メール: <input type="email" id="email"></label><br><br>
     <button type="button" onclick="addPerson()">追加</button>
   </form>
 
-  <h3>追加されたデータ</h3>
-  <table id="dataTable">
-    <thead>
-      <tr>
-        <th>名前</th>
-        <th>年齢</th>
-        <th>住所</th>
-        <th>メール</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-
-  <br>
-  <button onclick="exportToExcel()">Excel出力</button>
-
   <script>
-    const peopleData = [];
+    let peopleData = JSON.parse(localStorage.getItem("peopleData") || "[]");
 
     function addPerson() {
+      const id = document.getElementById("id").value;
       const name = document.getElementById("name").value;
-      const age = document.getElementById("age").value;
+      const birth = document.getElementById("birth").value;
       const address = document.getElementById("address").value;
       const email = document.getElementById("email").value;
 
-      if (!name || !age) {
-        alert("名前と年齢は必須です。");
+      if (!id || !name || !birth) {
+        alert("社員番号・名前・生年月日は必須です。");
         return;
       }
 
-      peopleData.push([name, age, address, email]);
+      peopleData.push({ id, name, birth, address, email });
+      localStorage.setItem("peopleData", JSON.stringify(peopleData));
 
-      const tableBody = document.getElementById("dataTable").getElementsByTagName("tbody")[0];
-      const row = tableBody.insertRow();
-      [name, age, address, email].forEach((val, idx) => {
-        const cell = row.insertCell(idx);
-        cell.textContent = val;
-      });
-
-      document.getElementById("
+      // 入力リセット
+      document.getElementById("dataForm").reset();
+    }
+  </script>
+</body>
+</html>
